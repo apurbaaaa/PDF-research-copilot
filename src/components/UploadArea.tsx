@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProcessingResults } from "./ProcessingResults";
 
 interface UploadAreaProps {
   onDocumentSelect: (doc: any) => void;
@@ -10,6 +11,7 @@ interface UploadAreaProps {
 export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processedDocument, setProcessedDocument] = useState<any>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -55,7 +57,7 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
     };
     
     setIsProcessing(false);
-    onDocumentSelect(mockDocument);
+    setProcessedDocument(mockDocument);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +66,39 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
       processFile(file);
     }
   };
+
+  const handleSaveToLibrary = () => {
+    if (processedDocument) {
+      onDocumentSelect(processedDocument);
+      setProcessedDocument(null);
+    }
+  };
+
+  const handleProcessAnother = () => {
+    setProcessedDocument(null);
+  };
+
+  if (processedDocument) {
+    return (
+      <div>
+        <ProcessingResults document={processedDocument} />
+        <div className="flex justify-center gap-4 mt-8">
+          <button 
+            onClick={handleSaveToLibrary}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            Save to Library
+          </button>
+          <button 
+            onClick={handleProcessAnother}
+            className="px-6 py-3 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+          >
+            Process Another
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isProcessing) {
     return (
@@ -79,42 +114,53 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
   }
 
   return (
-    <div
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      className={cn(
-        "bg-white/80 backdrop-blur-xl border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 shadow-lg hover:shadow-xl",
-        isDragging 
-          ? "border-blue-500 bg-blue-50/50 scale-105" 
-          : "border-slate-300 hover:border-blue-400"
-      )}
-    >
-      <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-        <Upload className="w-8 h-8 text-white" />
+    <div className="max-w-4xl mx-auto">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-blue-600 bg-clip-text text-transparent mb-4">
+          Research Copilot
+        </h1>
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          Upload your research papers and get AI-powered summaries, citations, and intelligent organization
+        </p>
       </div>
       
-      <h3 className="text-2xl font-semibold text-slate-900 mb-4">
-        Upload Your Research Paper
-      </h3>
-      
-      <p className="text-lg text-slate-600 mb-8 max-w-md mx-auto">
-        Drag and drop a PDF file here, or click to browse and select from your computer
-      </p>
-      
-      <label className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-        <FileText className="w-5 h-5" />
-        Choose PDF File
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-      </label>
-      
-      <div className="mt-8 text-sm text-slate-500">
-        Supported format: PDF (up to 50MB)
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={cn(
+          "bg-white/80 backdrop-blur-xl border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 shadow-lg hover:shadow-xl",
+          isDragging 
+            ? "border-blue-500 bg-blue-50/50 scale-105" 
+            : "border-slate-300 hover:border-blue-400"
+        )}
+      >
+        <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <Upload className="w-8 h-8 text-white" />
+        </div>
+        
+        <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+          Upload Your Research Paper
+        </h3>
+        
+        <p className="text-lg text-slate-600 mb-8 max-w-md mx-auto">
+          Drag and drop a PDF file here, or click to browse and select from your computer
+        </p>
+        
+        <label className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+          <FileText className="w-5 h-5" />
+          Choose PDF File
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </label>
+        
+        <div className="mt-8 text-sm text-slate-500">
+          Supported format: PDF (up to 50MB)
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Bookmark, Tag, Share2, Download, Sparkles, Quote } from "lucide-react";
+import { Bookmark, Tag, Share2, Download, Sparkles, Quote, FileText } from "lucide-react";
 
 interface DocumentViewerProps {
   document: any;

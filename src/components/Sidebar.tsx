@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import { Library, Upload, FileText, Settings, Search, Tag, Bookmark } from "lucide-react";
+import { Library, Upload, FileText, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   activeView: string;
-  onViewChange: (view: 'upload' | 'library' | 'document') => void;
+  onViewChange: (view: 'upload' | 'library' | 'document' | 'settings') => void;
 }
 
 export const Sidebar = ({ activeView, onViewChange }: SidebarProps) => {
@@ -14,12 +14,7 @@ export const Sidebar = ({ activeView, onViewChange }: SidebarProps) => {
   const menuItems = [
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'library', label: 'Library', icon: Library },
-  ];
-
-  const quickActions = [
-    { label: 'Search Papers', icon: Search },
-    { label: 'Manage Tags', icon: Tag },
-    { label: 'Bookmarks', icon: Bookmark },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
@@ -63,27 +58,6 @@ export const Sidebar = ({ activeView, onViewChange }: SidebarProps) => {
             </button>
           ))}
         </div>
-
-        {!isCollapsed && (
-          <>
-            <div className="mt-8 mb-3">
-              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3">
-                Quick Actions
-              </h3>
-            </div>
-            <div className="space-y-1">
-              {quickActions.map((action) => (
-                <button
-                  key={action.label}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 transition-colors"
-                >
-                  <action.icon className="w-4 h-4" />
-                  <span className="text-sm">{action.label}</span>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
       </nav>
 
       {/* Collapse Toggle */}
@@ -93,7 +67,7 @@ export const Sidebar = ({ activeView, onViewChange }: SidebarProps) => {
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100/80 transition-colors"
         >
           <Settings className="w-4 h-4" />
-          {!isCollapsed && <span className="text-sm">Settings</span>}
+          {!isCollapsed && <span className="text-sm">Collapse</span>}
         </button>
       </div>
     </div>

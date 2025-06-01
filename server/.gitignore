@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime
+dist/
+build/
+.temp/
+tmp/
+*.tsbuildinfo
+
+# dotenv environment variables
+.env
+.env.local
+.env.*.local
+
+# bun lock (optional if you're not using it)
+bun.lockb
+
+# Vite
+.vite/
+
+# VSCode
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# IDE-specific
+.idea/
+*.swp
+*.swo

@@ -100,14 +100,14 @@ export const ProcessingResults = ({ document }: ProcessingResultsProps) => {
         </TabsContent>
       </Tabs>
 
-      <div className="flex justify-center gap-4 mt-8">
+      {/* <div className="flex justify-center gap-4 mt-8">
         <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
           Save to Library
         </button>
         <button className="px-6 py-3 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
           Process Another
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

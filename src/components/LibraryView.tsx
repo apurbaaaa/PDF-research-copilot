@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Search, Filter, Grid, List, FileText, Calendar, User, Tag, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -37,10 +36,10 @@ export const LibraryView = ({ onDocumentSelect }: LibraryViewProps) => {
   const fetchPapers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/papers/');
+      const response = await fetch('http://localhost:4000/api/papers'); // Remove trailing slash
       
       if (!response.ok) {
-        throw new Error('Failed to fetch papers');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
@@ -49,7 +48,7 @@ export const LibraryView = ({ onDocumentSelect }: LibraryViewProps) => {
       console.error('Error fetching papers:', error);
       toast({
         title: "Error",
-        description: "Failed to load papers from the library",
+        description: "Failed to load papers from the library. Make sure the backend server is running.",
         variant: "destructive",
       });
     } finally {

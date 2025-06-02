@@ -7,6 +7,9 @@ interface ProcessingResultsProps {
 }
 
 export const ProcessingResults = ({ document }: ProcessingResultsProps) => {
+  // Handle both 'tags' and 'keywords' from different sources
+  const keywords = document.keywords || document.tags || [];
+  
   return (
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-8">
@@ -25,7 +28,7 @@ export const ProcessingResults = ({ document }: ProcessingResultsProps) => {
         <TabsList className="grid w-full grid-cols-4 mb-6">
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="citations">Citations</TabsTrigger>
-          <TabsTrigger value="tags">Tags</TabsTrigger>
+          <TabsTrigger value="tags">Keywords</TabsTrigger>
           <TabsTrigger value="methodology">Methodology</TabsTrigger>
         </TabsList>
 
@@ -77,13 +80,13 @@ export const ProcessingResults = ({ document }: ProcessingResultsProps) => {
               <h2 className="text-2xl font-semibold text-slate-900">Auto-Generated Keywords</h2>
             </div>
             <div className="flex flex-wrap gap-3">
-              {document.tags && document.tags.length > 0 ? (
-                document.tags.map((tag: string) => (
+              {keywords && keywords.length > 0 ? (
+                keywords.map((keyword: string) => (
                   <span
-                    key={tag}
+                    key={keyword}
                     className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
                   >
-                    {tag}
+                    {keyword}
                   </span>
                 ))
               ) : (

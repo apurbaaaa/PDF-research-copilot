@@ -15,9 +15,14 @@ connectDatabase();
 
 // Middleware
 app.use(cors({
-  origin: "*", // Allow all origins (for testing only!)
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000", 
+    "https://5e78060b-ef97-4163-b830-e50f772b324c.lovableproject.com",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
+  credentials: true
 }));
 
 app.use(express.json());

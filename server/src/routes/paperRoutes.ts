@@ -22,4 +22,8 @@ const upload = multer({
 
 router.post("/upload", upload.single("file"), uploadAndProcessPDF);
 
+router.get("/test", (req, res) => {
+  res.json({ message: "Test route working" });
+});
+
 export default router;

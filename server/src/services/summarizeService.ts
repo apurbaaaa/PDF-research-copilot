@@ -14,7 +14,7 @@ export const summarizeText = async (text: string) => {
       throw new Error("GEMINI_API_KEY not found in environment variables");
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Truncate text to fit within token limits
     const maxLength = 12000;

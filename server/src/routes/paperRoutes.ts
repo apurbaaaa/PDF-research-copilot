@@ -21,7 +21,7 @@ const upload = multer({
 });
 
 router.post("/upload", upload.single("file"), uploadAndProcessPDF);
-router.get("/", getAllPapers); // Remove trailing slash
+router.get("/", getAllPapers);
 router.get("/:id", getPaperById);
 router.get("/:id/download", downloadPaper);
 

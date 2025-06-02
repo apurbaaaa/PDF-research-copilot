@@ -3,12 +3,15 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import paperRouter from "./routes/paperRoutes";
+import { connectDatabase } from "./utils/database";
 
 dotenv.config();
-// console.log("Loaded GEMINI_API_KEY:", process.env.GEMINI_API_KEY); // <== Add this line
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+// Connect to MongoDB
+connectDatabase();
 
 // Middleware
 app.use(cors({
@@ -16,7 +19,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
 }));
-
 
 app.use(express.json());
 

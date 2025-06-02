@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import multer from "multer";
-import { uploadAndProcessPDF } from "../controllers/paperController";
+import { uploadAndProcessPDF, getAllPapers, getPaperById, downloadPaper } from "../controllers/paperController";
 
 const router = Router();
 
@@ -21,6 +21,9 @@ const upload = multer({
 });
 
 router.post("/upload", upload.single("file"), uploadAndProcessPDF);
+router.get("/", getAllPapers);
+router.get("/:id", getPaperById);
+router.get("/:id/download", downloadPaper);
 
 router.get("/test", (req, res) => {
   res.json({ message: "Test route working" });

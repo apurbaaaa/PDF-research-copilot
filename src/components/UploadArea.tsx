@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProcessingResults } from "./ProcessingResults";
+import { useToast } from "@/hooks/use-toast";
 
 interface UploadAreaProps {
   onDocumentSelect: (doc: any) => void;
@@ -12,6 +13,7 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedDocument, setProcessedDocument] = useState<any>(null);
+  const { toast } = useToast();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -38,26 +40,57 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
   const processFile = async (file: File) => {
     setIsProcessing(true);
     
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    const mockDocument = {
-      id: Date.now(),
-      title: file.name.replace('.pdf', ''),
-      author: "Dr. Smith et al.",
-      year: 2024,
-      summary: "This research paper explores advanced machine learning techniques for natural language processing, with a focus on transformer architectures and their applications in scientific literature analysis.",
-      citations: [
-        "According to the findings, transformer models show 85% accuracy improvement over traditional methods.",
-        "The study demonstrates that attention mechanisms are crucial for understanding context.",
-        "Results indicate significant potential for automated research assistance applications."
-      ],
-      tags: ["Machine Learning", "NLP", "AI"],
-      file: file
-    };
-    
-    setIsProcessing(false);
-    setProcessedDocument(mockDocument);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      console.log('Uploading file:', file.name);
+      
+      const response = await fetch('http://localhost:4000/api/papers/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to process file');
+      }
+
+      const result = await response.json();
+      console.log('Processing result:', result);
+
+      const processedDoc = {
+        id: Date.now(),
+        title: result.title || file.name.replace('.pdf', ''),
+        author: "Unknown Author", // Backend doesn't extract author yet
+        year: new Date().getFullYear(),
+        summary: result.summary || "No summary available",
+        citations: result.citations || [],
+        tags: result.keywords || [],
+        methodology: result.methodology || "Not specified",
+        uploadDate: result.uploadDate,
+        fileSize: result.fileSize,
+        file: file
+      };
+      
+      setProcessedDocument(processedDoc);
+      
+      toast({
+        title: "Success!",
+        description: "Your document has been processed successfully.",
+      });
+      
+    } catch (error) {
+      console.error('Error processing file:', error);
+      
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to process the document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,6 +33,12 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
     
     if (pdfFiles.length > 0) {
       processFile(pdfFiles[0]);
+    } else {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a PDF file.",
+        variant: "destructive",
+      });
     }
   }, []);
 
@@ -53,20 +58,30 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to process file');
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const result = await response.json();
       console.log('Processing result:', result);
 
+      // Check if there was an AI processing error but file was still saved
+      if (result.error) {
+        toast({
+          title: "Partial Success",
+          description: "File uploaded but AI processing failed. You can still view the document.",
+          variant: "destructive",
+        });
+      }
+
       const processedDoc = {
-        id: Date.now(),
+        id: result.id || Date.now(),
         title: result.title || file.name.replace('.pdf', ''),
         author: "Unknown Author", // Backend doesn't extract author yet
         year: new Date().getFullYear(),
         summary: result.summary || "No summary available",
         citations: result.citations || [],
-        tags: result.keywords || [],
+        tags: result.keywords || [], // Map keywords to tags for frontend compatibility
+        keywords: result.keywords || [],
         methodology: result.methodology || "Not specified",
         uploadDate: result.uploadDate,
         fileSize: result.fileSize,
@@ -75,17 +90,19 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
       
       setProcessedDocument(processedDoc);
       
-      toast({
-        title: "Success!",
-        description: "Your document has been processed successfully.",
-      });
+      if (!result.error) {
+        toast({
+          title: "Success!",
+          description: "Your document has been processed successfully.",
+        });
+      }
       
     } catch (error) {
       console.error('Error processing file:', error);
       
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to process the document",
+        description: error instanceof Error ? error.message : "Failed to process the document. Make sure the backend server is running.",
         variant: "destructive",
       });
     } finally {
@@ -95,8 +112,16 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      processFile(file);
+    if (file) {
+      if (file.type === 'application/pdf') {
+        processFile(file);
+      } else {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload a PDF file.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

@@ -29,6 +29,11 @@ export const LibraryView = ({ onDocumentSelect }: LibraryViewProps) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Use the current domain for API calls to avoid CORS issues
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:4000' 
+    : 'https://5e78060b-ef97-4163-b830-e50f772b324c.lovableproject.com';
+
   useEffect(() => {
     fetchPapers();
   }, []);
@@ -36,19 +41,39 @@ export const LibraryView = ({ onDocumentSelect }: LibraryViewProps) => {
   const fetchPapers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/papers'); // Remove trailing slash
+      console.log('Fetching papers from:', `${API_BASE_URL}/api/papers`);
+      
+      const response = await fetch(`${API_BASE_URL}/api/papers`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+      });
+      
+      console.log('Papers response status:', response.status);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log('Papers data:', data);
       setPapers(data);
     } catch (error) {
       console.error('Error fetching papers:', error);
+      
+      let errorMessage = "Failed to load papers from the library.";
+      
+      if (error instanceof Error) {
+        if (error.message === "Failed to fetch") {
+          errorMessage = "Cannot connect to the backend server. Please make sure the server is running on port 4000.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to load papers from the library. Make sure the backend server is running.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -67,7 +92,13 @@ export const LibraryView = ({ onDocumentSelect }: LibraryViewProps) => {
   const handleDownload = async (paperId: string, fileName: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const response = await fetch(`http://localhost:4000/api/papers/${paperId}/download`);
+      console.log('Downloading paper:', paperId);
+      
+      const response = await fetch(`${API_BASE_URL}/api/papers/${paperId}/download`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+      });
       
       if (!response.ok) {
         throw new Error('Failed to download paper');

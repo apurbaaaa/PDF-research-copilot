@@ -19,11 +19,15 @@ app.use(cors({
     "http://localhost:5173",
     "http://localhost:3000", 
     "https://5e78060b-ef97-4163-b830-e50f772b324c.lovableproject.com",
+    "https://id-preview--5e78060b-ef97-4163-b830-e50f772b324c.lovable.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
+
+// Add preflight handling
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -33,6 +37,11 @@ app.use("/api/papers", paperRouter);
 // Health check route
 app.get("/health", (req, res) => {
   res.json({ status: "OK", message: "Server is running" });
+});
+
+// Test route to verify CORS
+app.get("/api/test", (req, res) => {
+  res.json({ message: "CORS test successful", timestamp: new Date().toISOString() });
 });
 
 app.listen(PORT, () => {

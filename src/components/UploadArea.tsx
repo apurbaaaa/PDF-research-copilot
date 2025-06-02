@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,11 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedDocument, setProcessedDocument] = useState<any>(null);
   const { toast } = useToast();
+
+  // Use the current domain for API calls to avoid CORS issues
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:4000' 
+    : 'https://5e78060b-ef97-4163-b830-e50f772b324c.lovableproject.com';
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -50,15 +56,27 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
       formData.append('file', file);
 
       console.log('Uploading file:', file.name);
+      console.log('API URL:', `${API_BASE_URL}/api/papers/upload`);
       
-      const response = await fetch('http://localhost:4000/api/papers/upload', {
+      const response = await fetch(`${API_BASE_URL}/api/papers/upload`, {
         method: 'POST',
         body: formData,
+        mode: 'cors',
+        credentials: 'include',
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Server error: ${response.status}`);
+        let errorMessage = `Server error: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          console.error('Could not parse error response:', parseError);
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -100,9 +118,19 @@ export const UploadArea = ({ onDocumentSelect }: UploadAreaProps) => {
     } catch (error) {
       console.error('Error processing file:', error);
       
+      let errorMessage = "Failed to process the document.";
+      
+      if (error instanceof Error) {
+        if (error.message === "Failed to fetch") {
+          errorMessage = "Cannot connect to the backend server. Please make sure the server is running on port 4000.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to process the document. Make sure the backend server is running.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

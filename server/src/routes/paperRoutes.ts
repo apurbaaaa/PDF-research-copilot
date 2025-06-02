@@ -1,7 +1,11 @@
-
 import { Router } from "express";
 import multer from "multer";
-import { uploadAndProcessPDF, getAllPapers, getPaperById, downloadPaper } from "../controllers/paperController";
+import { 
+  uploadAndProcessPDF, 
+  getAllPapers, 
+  getPaperById, 
+  downloadPaper 
+} from "../controllers/paperController";
 
 const router = Router();
 
@@ -20,6 +24,7 @@ const upload = multer({
   }
 });
 
+// Define routes (all are now fully valid in Express 5)
 router.post("/upload", upload.single("file"), uploadAndProcessPDF);
 router.get("/", getAllPapers);
 router.get("/:id", getPaperById);

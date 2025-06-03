@@ -1,73 +1,44 @@
-# Welcome to your Lovable project
+# PDF Research Copilot
 
-## Project info
+**PDF Research Copilot** is a web-based tool that helps researchers manage and interact with their academic papers more efficiently. It allows users to upload PDFs, view them in a responsive reader, and lays the groundwork for intelligent features like summarization and citation extraction.
 
-**URL**: https://lovable.dev/projects/5e78060b-ef97-4163-b830-e50f772b324c
+## 🚀 Features
 
-## How can I edit this code?
+- 📄 Upload and view PDF documents directly in the browser
+- 🧭 Navigate through pages with an intuitive interface
+- ⚡ Built with a modern tech stack for speed and maintainability
+- 💡 Designed for future enhancements like GPT-based summaries and citation extraction
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- [Vite](https://vitejs.dev/) – Lightning-fast frontend tooling
+- [React](https://reactjs.org/) – Declarative UI library
+- [TypeScript](https://www.typescriptlang.org/) – Typed JavaScript for scalability
+- [Tailwind CSS](https://tailwindcss.com/) – Utility-first styling
+- [shadcn/ui](https://ui.shadcn.dev/) – Prebuilt, accessible UI components
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5e78060b-ef97-4163-b830-e50f772b324c) and start prompting.
+## 📦 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+Make sure you have the following installed:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Node.js** (v16+ recommended)
+- **npm** or **yarn**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+Clone the repository and install dependencies:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+git clone https://github.com/apurbaaaa/PDF-research-copilot.git
+cd PDF-research-copilot
+npm install
 ```
 
-**Edit a file directly in GitHub**
+## Running the App
+### Start the development server:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/5e78060b-ef97-4163-b830-e50f772b324c) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+npm run dev
+```

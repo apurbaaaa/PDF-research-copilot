@@ -17,7 +17,8 @@ connectDatabase();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "http://localhost:8081", 
+    "http://localhost:8080", 
+    "http://localhost:8081",
     "https://5e78060b-ef97-4163-b830-e50f772b324c.lovableproject.com",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
